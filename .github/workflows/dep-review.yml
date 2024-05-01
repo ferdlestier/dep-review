@@ -1,0 +1,35 @@
+name: Security check - Dependency review
+
+on:
+    pull_request:
+      types: [opened, reopened]
+
+jobs:
+  review-dependencies:
+    runs-on: ubuntu-latest
+    permissions:
+        pull-requests: write
+        contents: read
+    steps:
+
+        - name: 'Check out repo'
+          uses: actions/checkout@v3 # checkout the repository content
+
+        - name: 'Review Dependencies'
+          id: dependency_review
+          uses: actions/dependency-review-action@v4 # check for vulnerable package versions
+          with:
+            fail-on-severity: high
+            comment-summary-in-pr: never
+            warn-only: true
+            license-check: false
+
+        - name: "PR Comment"
+          id: pr_comment
+          if: ${{ steps.dependency_review.outputs.dependency-changes != '[]' }}
+          uses: thollander/actions-comment-pull-request@v2
+          with:
+            message: ${{ steps.dependency_review.outputs.comment-content }}
+            
+
+ 
