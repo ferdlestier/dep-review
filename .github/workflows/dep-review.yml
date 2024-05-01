@@ -23,6 +23,7 @@ jobs:
             comment-summary-in-pr: never
             warn-only: true
             license-check: false
+            show-openssf-scorecard-levels: true
 
         - name: "PR Comment"
           id: pr_comment
